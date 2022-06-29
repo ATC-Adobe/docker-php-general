@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker exec -it --user magento `docker ps --format '{{.Names}}' | grep MAG_magento` bash

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source /etc/environment
+
+docker stack deploy --compose-file src/docker-compose.yml PHP

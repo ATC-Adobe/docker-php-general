@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+[ -z "$1" ] && echo "Please specify a CLI command (ex. ls)" && exit
+
+docker exec -it --user magento `docker ps --format '{{.Names}}' | grep PHP_php` "$@"

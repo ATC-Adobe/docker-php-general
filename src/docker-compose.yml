@@ -1,0 +1,105 @@
+version: "3"
+services:
+  nginx:
+    image: php_nginx:latest
+    container_name: php_nginx
+    build:
+      context: ./nginx
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 384M
+    links:
+      - php
+      - mysql
+      - mailcatcher
+    volumes:
+      - /var/www/php_php:/var/www/php
+
+  php:
+    image: php_php:latest
+    container_name: php_php
+    build:
+      context: ./php
+    deploy:
+      resources:
+        limits:
+          memory: 3072M
+        reservations:
+          memory: 2944M
+    ports:
+      - "19000:9000"
+      - "19009:9009"
+      - "12000:22"
+    links:
+      - mysql
+      - rabbitmq
+    volumes:
+      - /var/www/php_php:/var/www/php
+    environment:
+      - MYSQL_ROOT_PASSWORD=myroot
+      - MYSQL_DATABASE=app
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=qwerty
+      - MYSQL_HOST=mysql
+      - HOSTNAME
+      - RABBITMQ_USER=rabbitmq
+      - RABBITMQ_PASSWORD=rabbitmq
+      - RABBITMQ_HOST=rabbitmq
+
+  mysql:
+    image: php_mysql:latest
+    container_name: php_mysql
+    build:
+      context: ./mysql
+    deploy:
+      resources:
+        limits:
+          memory: 896M
+        reservations:
+          memory: 768M
+    ports:
+      - "3306:3306"
+    volumes:
+      - /var/lib/php_mysql:/var/lib/mysql
+    command: --max_allowed_packet=1000000000 --net_buffer_length=1000000
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: myroot
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: qwerty
+
+  mailcatcher:
+    image: php_mailcatcher:latest
+    container_name: php_mailcatcher
+    build:
+      context: ./mailcatcher
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 48M
+    ports:
+      - "1080:1080"
+
+  rabbitmq:
+    image: php_rabbitmq:latest
+    container_name: php_rabbitmq
+    build:
+      context: ./rabbitmq
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 512M
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq

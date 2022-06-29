@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+cd ./src/nginx/
+docker build --no-cache -t php_nginx .
+cd -
+
+cd ./src/mailcatcher/
+docker build --no-cache -t php_mailcatcher .
+cd -
+
+cd ./src/mysql/
+docker build --no-cache -t php_mysql .
+cd -
+
+cd ./src/php/
+docker build --no-cache -t php_php .
+cd -
+
+cd ./src/rabbitmq/
+docker build --no-cache -t php_rabbitmq .
+cd -
