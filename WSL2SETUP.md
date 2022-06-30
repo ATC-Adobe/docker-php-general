@@ -11,7 +11,7 @@ Tested on Windows 10 and Windows 11.
 ### Enabling Windows Subsystem for Linux and installing Ubuntu
 
 1. Open elevated PowerShell (as Admin).
-2. Execute `wsl --install`.
+2. Execute `wsl --install -d Ubuntu`.
 3. Reboot system.
 4. After reboot Ubuntu installation should start automatically.
 

@@ -11,6 +11,9 @@ services:
           memory: 512M
         reservations:
           memory: 384M
+    ports:
+      - "80:80"
+      - "443:443"
     links:
       - php
       - mysql
