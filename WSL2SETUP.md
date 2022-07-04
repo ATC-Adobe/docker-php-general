@@ -75,7 +75,7 @@ Your host will be `localwsl.com`.\
    1. Go to Your home directory (if You are not there already) by command `cd ~`.
    2. Create dir by command `mkdir docker`.
 2. Go inside this folder by command `cd docker`.
-3. Execute `git clone https://<github_username>:<github_token>@github.com/ATC-Adobe/docker-magento2-general.git .`.
+3. Execute `git clone https://<github_username>:<github_token>@github.com/ATC-Adobe/docker-php-general.git .`.
 
 ### Creating volumes for persistent data
 
