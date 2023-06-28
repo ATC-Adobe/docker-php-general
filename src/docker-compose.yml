@@ -16,7 +16,7 @@ services:
       - "443:443"
     links:
       - php
-      - mysql
+      - postgres
       - mailcatcher
     volumes:
       - /var/www/php_php:/var/www/php
@@ -37,43 +37,32 @@ services:
       - "19009:9009"
       - "12000:22"
     links:
-      - mysql
+      - postgres
       - rabbitmq
     volumes:
       - /var/www/php_php:/var/www/php
     environment:
-      - MYSQL_ROOT_PASSWORD=myroot
-      - MYSQL_DATABASE=app
-      - MYSQL_USER=app
-      - MYSQL_PASSWORD=qwerty
-      - MYSQL_HOST=mysql
       - HOSTNAME
       - RABBITMQ_USER=rabbitmq
       - RABBITMQ_PASSWORD=rabbitmq
       - RABBITMQ_HOST=rabbitmq
 
-  mysql:
-    image: php_mysql:latest
-    container_name: php_mysql
+  postgres:
     build:
-      context: ./mysql
-    deploy:
-      resources:
-        limits:
-          memory: 896M
-        reservations:
-          memory: 768M
-    ports:
-      - "3306:3306"
-    volumes:
-      - /var/lib/php_mysql:/var/lib/mysql
-    command: --max_allowed_packet=1000000000 --net_buffer_length=1000000
+      context: ./postgres
+      dockerfile: postgres.dockerfile
+    image: php_postgres
+    container_name: php_postgres
     environment:
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: myroot
-      MYSQL_DATABASE: app
-      MYSQL_USER: app
-      MYSQL_PASSWORD: qwerty
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty
+      PGDATA: /var/lib/php_postgres/data
+    volumes:
+      - dbapp:/var/lib/php_postgres/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
 
   mailcatcher:
     image: php_mailcatcher:latest
@@ -106,3 +95,6 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=rabbitmq
       - RABBITMQ_DEFAULT_PASS=rabbitmq
+volumes:
+  dbapp:
+    external: true

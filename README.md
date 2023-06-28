@@ -7,7 +7,7 @@
 ## Included:
 - PHP-FPM image.
 - Nginx image for HTTP server.
-- MySQL image for DB server.
+- PostgreSQL image for DB server.
 - RabbitMQ image for messaging queue.
 - Mailcatcher image for mail testing.
 ___
@@ -21,7 +21,7 @@ ___
 ## Initial setup:
 1. Create folders:
    1. `/var/www/php_php`
-   2. `/var/lib/php_mysql`
+   2. `/var/lib/php_postgres`
 2. If You don't have any Docker Swarm node then initialize it with command `docker swarm init`.
 ___
 
@@ -51,15 +51,14 @@ Execute `bin/cli <command>`.
 Execute `docker stats`.
 
 ### Notes:
-- Code and DB state is persistent as those are stored in `/var/www/php_php` and `/var/lib/php_mysql`.
+- Code and DB state is persistent as those are stored in `/var/www/php_php` and `/var/lib/php_postgres`.
 
 ### Connection info
-- MySQL host: mysql
-- MySQL port: 3306
-- MySQL root password: myroot
-- MySQL DB: app
-- MySQL user: app
-- MySQL app user password: qwerty
+- PostgreSQL host: localwsl.com
+- PostgreSQL port: 5432
+- PostgreSQL DB: postgres
+- PostgreSQL user: postgres
+- PostgreSQL password: qwerty
 - RabbitMQ host: rabbitmq
 - RabbitMQ port: 5672|15672
 - MTA* host: localhost (use for PHP Mail)

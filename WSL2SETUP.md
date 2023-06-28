@@ -1,4 +1,5 @@
 # WSL2 (Windows) Setup Instructions
+
 Tested on Windows 10 and Windows 11.
 
 ## WSL2 Initial Setup
@@ -37,8 +38,10 @@ processors=4
 
 1. Execute `sudo apt-get update`.
 2. Execute `sudo apt-get install ca-certificates curl gnupg lsb-release`.
-3. Execute `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg`.
-4. Execute `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`.
+3.
+Execute `curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg`.
+4.
+Execute `echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`.
 5. Execute `sudo apt-get update`.
 6. Execute `sudo apt-get install docker-ce docker-ce-cli containerd.io`.
 7. Execute `sudo apt-get install ssh`.
@@ -47,8 +50,8 @@ processors=4
 10. Edit ~/.bashrc file to run docker and ssh services on WSL2 startup.
     1. Execute `nano ~/.bashrc`.
     2. Add following lines on bottom.
-       1. `wsl.exe -u root service docker status > /dev/null || wsl.exe -u root service docker start > /dev/null`
-       2. `wsl.exe -u root service ssh status > /dev/null || wsl.exe -u root service ssh start > /dev/null`
+        1. `wsl.exe -u root service docker status > /dev/null || wsl.exe -u root service docker start > /dev/null`
+        2. `wsl.exe -u root service ssh status > /dev/null || wsl.exe -u root service ssh start > /dev/null`
     3. `Ctrl + o` to save.
     4. `Ctrl + x` to exit.
 
@@ -59,6 +62,11 @@ processors=4
 3. Open Ubuntu.
 
 ### WSL2 Ubuntu Host Sync
+
+> NOTE! Watch for ubuntu version. In `ubuntuWslHostSync.ps1` file in line
+> 9: `$wsl_ip = (wsl -d ubuntu hostname -I).trim()` the `ubuntu` needs to be same as yours installed Ubuntu version. 
+> Example: for Ubuntu 20.04 it should look: `$wsl_ip = (wsl -d ubuntu-20.04 hostname -I).trim()`
+> You can easily check Ubuntu version by typing in powershell `wsl -l -v`.
 
 1. Copy `ubuntuWslHostSync.ps1` from repository `wslTools/ubuntuWslHostSync` folder to `C:\Scripts\ `.
 2. Copy `ubuntuWslHostSync.cmd` from repository `wslTools/ubuntuWslHostSync` folder to desktop.
@@ -72,19 +80,20 @@ Your host will be `localwsl.com`.\
 ### Cloning repository
 
 1. Create dir in your linux home directory. (You may choose the name, but I will use `docker`)
-   1. Go to Your home directory (if You are not there already) by command `cd ~`.
-   2. Create dir by command `mkdir docker`.
+    1. Go to Your home directory (if You are not there already) by command `cd ~`.
+    2. Create dir by command `mkdir docker`.
 2. Go inside this folder by command `cd docker`.
 3. Execute `git clone https://<github_username>:<github_token>@github.com/ATC-Adobe/docker-php-general.git .`.
 
 ### Creating volumes for persistent data
 
-1. Change dir `/var/www` ownage to your user by command `sudo chown <your_linux_username>:<your_linux_username> /var/www`.
-   1. If this dir do not exist You must create it first by command `sudo mkdir /var/www`.
+1. Change dir `/var/www` ownage to your user by
+   command `sudo chown <your_linux_username>:<your_linux_username> /var/www`.
+    1. If this dir do not exist You must create it first by command `sudo mkdir /var/www`.
 2. Create dir `/var/www/php_php`. (this is where Your Magento instance will be living).
-   1. Execute `mkdir /var/www/php_php`.
-3. Create dir `/var/lib/php_mysql`. (this is where SQL data persists).
-   1. Execute `sudo mkdir /var/lib/php_mysql`.
+    1. Execute `mkdir /var/www/php_php`.
+3. Create dir `/var/lib/php_postgres`. (this is where SQL data persists).
+    1. Execute `sudo mkdir /var/lib/php_postgres`.
 
 ### Building images and running them
 
@@ -99,21 +108,21 @@ Your host will be `localwsl.com`.\
 ### Cannot reach localwsl.com from Windows browser or docker service is not starting
 
 1. If your Ubuntu is using nftables instead of iptables (ex. 22.04) run following commands on it:
-   1. `sudo update-alternatives --set iptables /usr/sbin/iptables-legacy`
-   2. `sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy`
+    1. `sudo update-alternatives --set iptables /usr/sbin/iptables-legacy`
+    2. `sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy`
 2. In Powershell as administrator run commands:
-   1. `netsh winsock reset`
-   2. `netsh int ip reset all`
-   3. `netsh winhttp reset proxy`
-   4. `ipconfig /flushdns`
-   5. `netsh winsock reset`
+    1. `netsh winsock reset`
+    2. `netsh int ip reset all`
+    3. `netsh winhttp reset proxy`
+    4. `ipconfig /flushdns`
+    5. `netsh winsock reset`
 3. Restart PC.
 
 ### Logon failure: the user has not been granted the requested logon type at this computer.
 
 1. Restart vmcompute service.
-   1. Open elevated PowerShell (as Admin)
-   2. Execute `Get-Service vmcompute | Restart-Service`.
+    1. Open elevated PowerShell (as Admin)
+    2. Execute `Get-Service vmcompute | Restart-Service`.
 
 ### DNS resolution problems / no internet access.
 
