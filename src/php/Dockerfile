@@ -30,6 +30,9 @@ RUN apt-get update && apt-get -q -y install \
     docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
     docker-php-ext-install -j$(nproc) gd curl zip pdo_mysql bcmath soap intl xsl
 
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 RUN wget https://getcomposer.org/download/2.3.5/composer.phar
 RUN mv composer.phar /usr/bin/composer
 RUN chmod a+x /usr/bin/composer
